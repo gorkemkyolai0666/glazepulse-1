@@ -1,7 +1,7 @@
 {
-  "name": "glazepulse-backend",
+  "name": "bindpulse-backend",
   "version": "1.0.0",
-  "description": "GlazePulse Escape Room Facility Operations API",
+  "description": "BindPulse Escape Room Facility Operations API",
   "scripts": {
     "build": "nest build",
     "start": "nest start",
