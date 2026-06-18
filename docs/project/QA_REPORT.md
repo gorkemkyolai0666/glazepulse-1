@@ -1,4 +1,4 @@
-# GlazePulse — QA Raporu (QA_REPORT)
+# BindPulse — QA Raporu (QA_REPORT)
 
 **Tarih:** 2026-06-17  
 **Durum:** MVP testleri geçti

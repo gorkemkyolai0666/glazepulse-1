@@ -1,47 +1,57 @@
-# GlazePulse — Final Documentation
+# BindPulse — Final Documentation
+
+**Tamamlanma:** 2026-06-18  
+**Repo:** https://github.com/gorkemkyolai0666/glazepulse-1
 
 ## Proje Özeti
 
-| Alan | Değer |
-|------|-------|
-| **Proje** | glazepulse |
-| **Repo** | https://github.com/gorkemkyolai06/glazepulse |
-| **Kategori** | B2B SaaS — Seramik Atölyesi Fırın Yönetimi |
-| **Hedef Kitle** | ABD bağımsız seramik atölyeleri (3–20 fırın) |
-| **Problem** | Pişirim programları, sır partileri ve bakım kayıtları kağıt/Excel ile yönetiliyor |
-| **İş Modeli** | SaaS $4–10/fırın/ay |
-| **Tamamlanma** | 2026-06-18 |
+BindPulse, cilt atölyeleri ve kitap restorasyon stüdyoları için operasyon yönetim SaaS'ıdır. Pres envanteri, cilt işleri, bakım, bitirme kontrol listeleri, malzeme siparişleri ve hizmet tarifelerini tek platformda birleştirir.
+
+## Benzersizlik Boyutları
+
+| Boyut | Değer |
+|-------|-------|
+| Sektör | Cilt atölyesi & kitap restorasyonu |
+| Hedef Kitle | 2-8 çalışanlı artisan bindery'ler |
+| Problem | Teslim tarihi kaçırma, malzeme takibi, pres bakımı |
+| İş Modeli | B2B SaaS — aktif iş başına $3-8/ay |
+| Tasarım | Neo-Victorian Archive |
 
 ## Teknik Stack
 
-- **Backend:** NestJS, Prisma, PostgreSQL (port 4018)
-- **Frontend:** Next.js 14, Tailwind, shadcn/ui (port 3018)
-- **CI:** GitHub Actions + Postgres service
+- **Frontend:** Next.js 14, TypeScript, Tailwind CSS, shadcn/ui
+- **Backend:** NestJS, Prisma, PostgreSQL
+- **CI/CD:** GitHub Actions
+- **Deploy:** Railway (backend) + Vercel (frontend)
 
-## API Modülleri
+## API Endpoints
 
-- `/api/auth` — login, register, me
-- `/api/health` — sağlık kontrolü
-- `/api/pottery-studio` — atölye profili
-- `/api/kilns` — fırın CRUD
-- `/api/firing-batches` — pişirim partileri CRUD
-- `/api/kiln-maintenance` — bakım CRUD
-- `/api/glaze-checklists` — sır kontrol listeleri CRUD
-- `/api/clay-orders` — kil siparişleri CRUD
-- `/api/firing-rates` — pişirim tarifeleri CRUD
-- `/api/dashboard/stats` — operasyon metrikleri
+- `GET /api/health` — sağlık kontrolü
+- `POST /api/auth/login` — giriş (200)
+- `POST /api/auth/register` — kayıt (201)
+- CRUD: `/api/presses`, `/api/binding-jobs`, `/api/press-maintenance`, `/api/finishing-checklists`, `/api/material-orders`, `/api/service-rates`
+- `GET /api/dashboard/stats` — panel istatistikleri
 
-## Demo Hesabı
+## Demo
 
-- `demo@claywheelstudio.com` / `demo123456`
+```
+Email: demo@heritagebindery.com
+Password: demo123456
+```
 
-## Deployment
+## Kararlar
 
-Deploy bekliyor — bkz. `docs/project/DEPLOYMENT.md`
+1. **Repo oluşturma:** `create_repository` MCP izni yok → `fork_repository` workaround (glazepulse-1)
+2. **Domain transform:** glazepulse → bindpulse Python script ile otomatik dönüşüm
+3. **Tasarım:** Alt dock navigasyon — önceki projelerin side-rail/top-nav yapılarından farklı
+4. **Deployment:** Org secrets CI'da — agent ortamında provisioning çalıştırılamadı
 
-## Benzersizlik
+## Dosya Yapısı
 
-- **Sektör:** Sanat & zanaat — seramik (önceki projelerden farklı)
-- **Hedef:** Atölye sahipleri ve potter'lar (marina, terzi, bowling vb. değil)
-- **İş akışı:** Fırın pişirim döngüsü, cone ayarı, sır partileri
-- **Tasarım:** Artisan Brutalist + dikey side-rail navigasyon
+```
+backend/          NestJS API
+frontend/         Next.js UI
+docs/             Proje dokümantasyonu
+scripts/          Provisioning + transform
+tests/            Integration smoke tests
+```

@@ -3,7 +3,7 @@
 ## Pazar Büyüklüğü
 
 - ABD'de ~1.200 bağımsız go-kart pisti (2025 tahmini)
-- Bağımsız operatörlerin ~75%'i Excel, kağıt veya genel POS kullanıyor
+- Bağımsız operatörlerin ~75%'i Excel, kağıt veya genel POS kullaniyor
 - Ortalama tesis: 15-30 kart, yıllık gelir $300K-900K
 
 ## Hedef Segment

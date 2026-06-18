@@ -1,4 +1,4 @@
-# GlazePulse — Veritabanı (DATABASE)
+# BindPulse — Veritabanı (DATABASE)
 
 ## PostgreSQL
 
@@ -8,14 +8,14 @@ Connection: `DATABASE_URL` environment variable
 
 | Model | Tablo | Açıklama |
 |-------|-------|----------|
-| PotteryStudio | pottery_studios | Tenis tesisi profili |
+| Bindery | binderies | Tenis tesisi profili |
 | User | users | Kullanıcı hesapları |
 | Court | courts | Kort envanteri |
-| FiringBatch | firing_batches | Ders gelir kayıtları |
-| KilnMaintenance | kiln_maintenance | Top makinesi bakım |
-| GlazeChecklist | glaze_checklists | Kort bakım planı |
-| ClayOrder | clay_orders | Kordon siparişleri |
-| FiringRate | firing_rates | Tarife kademeleri |
+| BindingJob | binding_jobs | Ders gelir kayıtları |
+| PressMaintenance | press_maintenance | Top makinesi bakım |
+| FinishingChecklist | finishing_checklists | Kort bakım planı |
+| MaterialOrder | material_orders | Kordon siparişleri |
+| ServiceRate | service_rates | Tarife kademeleri |
 
 ## Migration
 
@@ -27,8 +27,8 @@ npm run deploy       # migrate + seed + start:prod
 
 ## Seed Verisi
 
-- 1 tesis: Claywheel Pottery Studio (Phoenix, AZ)
-- 1 demo kullanıcı: demo@claywheelstudio.com
+- 1 tesis: Heritage Bindery & Conservation (Phoenix, AZ)
+- 1 demo kullanıcı: demo@heritagebindery.com
 - 8 kort (kil, sert, çim, kapalı)
 - 2 ders oturumu
 - 2 top makinesi bakım kaydı

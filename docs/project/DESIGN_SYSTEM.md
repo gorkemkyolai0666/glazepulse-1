@@ -1,38 +1,45 @@
-# GlazePulse Design System
+# BindPulse — Tasarım Sistemi
 
-## Tasarım Yönü: Artisan Brutalist
+## Yön: Neo-Victorian Archive
 
-Seramik atölyesinin ham malzeme estetiğinden ilham alan, veri yoğun ama sıcak bir arayüz.
+Cilt atölyesi ve arşiv koruma estetiğinden ilham alan, editorial ve teknik bir arayüz dili.
 
 ## Renk Paleti
 
-| Token | Light HSL | Kullanım |
-|-------|-----------|----------|
-| background | 210 22% 96% | Sayfa zemini — soğuk gri-mavi |
-| foreground | 215 28% 17% | Ana metin — derin slate |
-| accent | 18 62% 46% | Pişmiş toprak turuncusu — CTA |
-| primary | 215 32% 22% | Başlıklar |
-| success | 152 28% 36% | Müsait fırın |
-| warning | 38 85% 48% | Soğutma durumu |
+| Token | HSL | Kullanım |
+|-------|-----|----------|
+| primary | 338 45% 20% | Bordo — başlıklar, kenarlıklar |
+| background | 38 43% 93% | Parşömen arka plan |
+| accent | 43 74% 38% | Pirinç — CTA, vurgu |
+| foreground | 222 47% 11% | Mürekkep metin |
+| secondary | 43 56% 88% | Yumuşak vurgu alanları |
 
 ## Tipografi
 
-- **Display:** Fraunces — başlıklar, marka
-- **Body:** Source Sans 3 — arayüz metni
+- **Display:** EB Garamond — başlıklar, marka
+- **Body:** Libre Baskerville — paragraf ve form metinleri
 
-## Bileşen Dili
+## Spacing Scale
 
-- `rounded-xl` kartlar (12px radius)
-- Dikey `SideRail` navigasyon — üst menüden farklı
-- `kiln-pill` durum rozetleri
-- Köşeli butonlar (`rounded-lg`)
+4, 8, 12, 16, 24, 32, 48, 64 px
+
+## Border Radius
+
+0px — keskin köşeler, arşiv kart estetiği
 
 ## Navigasyon
 
-Sol sabit dikey menü — stitchpulse/escapepulse ailesindeki üst menüden farklılaştırılmış.
+- **Mobil:** Alt dock (4 birincil + "Daha" menüsü)
+- **Masaüstü:** Sol kenarlıklı dikey menü (lg+)
+
+## Bileşen Dili
+
+- `archive-card` — 2px kenarlık, offset gölge
+- `archive-btn` — uppercase, geniş harf aralığı
+- `archive-pill` — durum etiketleri
 
 ## Erişilebilirlik
 
 - WCAG AA kontrast
-- Light/dark mode
-- `aria-label` ve `aria-current` navigasyonda
+- Light/dark mode desteği
+- Türkçe kullanıcı arayüzü

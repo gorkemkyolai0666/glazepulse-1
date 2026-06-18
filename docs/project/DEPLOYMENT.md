@@ -1,31 +1,24 @@
-# GlazePulse Deployment
+# BindPulse — Deployment
 
-## Durum: Deploy Bekliyor
+**Son Güncelleme:** 2026-06-18  
+**Repo:** https://github.com/gorkemkyolai0666/glazepulse-1 (rename pending → bindpulse)
 
-MVP kodu tamamlandı. Production deployment için organization-level GitHub Actions secrets gerekli.
+## Deployment Durumu
 
-## Gerekli Secrets
+| Bileşen | Durum |
+|---------|-------|
+| GitHub Repository | ✅ Public fork (glazepulse-1) |
+| CI Pipeline | ✅ `.github/workflows/ci.yml` |
+| Provisioning Scripts | ✅ `npm run provision` |
+| Railway Backend | ⏳ Org secrets gerekli |
+| Vercel Frontend | ⏳ Org secrets gerekli |
 
-| Secret | Durum |
-|--------|-------|
-| GH_PAT | CI workflow tarafından doğrulanacak |
-| RAILWAY_API_TOKEN | CI workflow tarafından doğrulanacak |
-| VERCEL_TOKEN | CI workflow tarafından doğrulanacak |
-
-## Demo Hesabı
+## Demo Hesap
 
 | Alan | Değer |
 |------|-------|
-| E-posta | demo@claywheelstudio.com |
+| E-posta | demo@heritagebindery.com |
 | Şifre | demo123456 |
-
-## Beklenen URL'ler (provision sonrası)
-
-| Kaynak | URL |
-|--------|-----|
-| Frontend | TBD — Vercel production |
-| Backend | TBD — Railway production |
-| Health | TBD — `GET /api/health` |
 
 ## Ortam Değişkenleri
 
@@ -35,7 +28,7 @@ MVP kodu tamamlandı. Production deployment için organization-level GitHub Acti
 DATABASE_URL=
 JWT_SECRET=
 FRONTEND_URL=
-PORT=4018
+PORT=4019
 ```
 
 ### Frontend (Vercel)
@@ -44,23 +37,27 @@ PORT=4018
 NEXT_PUBLIC_API_URL=
 ```
 
-## CI Doğrulama
+## Deployment Engelleyiciler
 
-- Backend unit testleri ✅
-- Backend build ✅
-- Frontend build ✅
-- Integration testleri (CI Postgres ile) — push sonrası
+Cloud agent ortamında organization-level GitHub Actions secrets (`GH_PAT`, `RAILWAY_API_TOKEN`, `VERCEL_TOKEN`) doğrudan erişilebilir değil. `npm run provision` CI workflow'unda çalıştırılmalıdır.
 
-## Provisioning
+## Public URL'ler
 
-```bash
-npm run provision
-```
+| Servis | URL |
+|--------|-----|
+| Frontend | _Deploy sonrası güncellenecek_ |
+| Backend | _Deploy sonrası güncellenecek_ |
+| Health | `{BACKEND_URL}/api/health` |
 
-Provisioning scriptleri: `scripts/provision-all.ts`, `scripts/provision-railway.ts`, `scripts/provision-vercel.ts`
+## Manuel Kurulum (İlk Kez)
 
-## Deployment Blokörleri (2026-06-18)
+1. Organization secrets yapılandır
+2. GitHub Actions CI'ı main branch'te çalıştır
+3. Railway: repo bağla, root `backend/`, Wait for CI
+4. Vercel: repo bağla, root `frontend/`
+5. Ortam değişkenlerini ayarla
+6. Smoke testleri çalıştır
 
-- Agent ortamında RAILWAY_API_TOKEN / VERCEL_TOKEN yok
-- Railway/Vercel GitHub native integration henüz yapılandırılmadı
-- `npm run provision` yalnızca CI workflow içinde secrets ile çalışır
+## Repo Rename
+
+`glazepulse-1` → `bindpulse` manuel rename gerektirir (API 403).
