@@ -1,4 +1,4 @@
-# GlazePulse — Mimari (ARCHITECTURE)
+# BindPulse — Mimari (ARCHITECTURE)
 
 ## Genel Bakış
 
@@ -30,11 +30,11 @@
 - `health` — GET /api/health
 - `tennis-club` — Tesis profili
 - `courts` — Kort envanteri
-- `firing-batches` — Ders gelir kayıtları
-- `kiln-maintenance` — Top makinesi bakım
-- `glaze-checklists` — Kort bakım planı
-- `clay-orders` — Kordon siparişleri
-- `firing-rates` — Tarife kademeleri
+- `binding-jobs` — Ders gelir kayıtları
+- `press-maintenance` — Top makinesi bakım
+- `finishing-checklists` — Kort bakım planı
+- `material-orders` — Kordon siparişleri
+- `service-rates` — Tarife kademeleri
 - `dashboard` — İstatistikler
 
 ## Güvenlik

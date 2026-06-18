@@ -1,4 +1,4 @@
-# GlazePulse — API (API)
+# BindPulse — API (API)
 
 Base URL: `{NEXT_PUBLIC_API_URL}` (production: Railway backend URL + `/api`)
 
@@ -36,53 +36,53 @@ Base URL: `{NEXT_PUBLIC_API_URL}` (production: Railway backend URL + `/api`)
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | /api/firing-batches | Yes | 200 |
-| GET | /api/firing-batches/:id | Yes | 200 |
-| POST | /api/firing-batches | Yes | 201 |
-| PATCH | /api/firing-batches/:id | Yes | 200 |
-| DELETE | /api/firing-batches/:id | Yes | 200 |
+| GET | /api/binding-jobs | Yes | 200 |
+| GET | /api/binding-jobs/:id | Yes | 200 |
+| POST | /api/binding-jobs | Yes | 201 |
+| PATCH | /api/binding-jobs/:id | Yes | 200 |
+| DELETE | /api/binding-jobs/:id | Yes | 200 |
 
 ## Ball Machine Maintenance
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | /api/kiln-maintenance | Yes | 200 |
-| GET | /api/kiln-maintenance/urgent | Yes | 200 |
-| GET | /api/kiln-maintenance/:id | Yes | 200 |
-| POST | /api/kiln-maintenance | Yes | 201 |
-| PATCH | /api/kiln-maintenance/:id | Yes | 200 |
-| DELETE | /api/kiln-maintenance/:id | Yes | 200 |
+| GET | /api/press-maintenance | Yes | 200 |
+| GET | /api/press-maintenance/urgent | Yes | 200 |
+| GET | /api/press-maintenance/:id | Yes | 200 |
+| POST | /api/press-maintenance | Yes | 201 |
+| PATCH | /api/press-maintenance/:id | Yes | 200 |
+| DELETE | /api/press-maintenance/:id | Yes | 200 |
 
 ## Court Maintenance
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | /api/glaze-checklists | Yes | 200 |
-| GET | /api/glaze-checklists/:id | Yes | 200 |
-| POST | /api/glaze-checklists | Yes | 201 |
-| PATCH | /api/glaze-checklists/:id | Yes | 200 |
-| DELETE | /api/glaze-checklists/:id | Yes | 200 |
+| GET | /api/finishing-checklists | Yes | 200 |
+| GET | /api/finishing-checklists/:id | Yes | 200 |
+| POST | /api/finishing-checklists | Yes | 201 |
+| PATCH | /api/finishing-checklists/:id | Yes | 200 |
+| DELETE | /api/finishing-checklists/:id | Yes | 200 |
 
 ## Stringing Orders
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | /api/clay-orders | Yes | 200 |
-| GET | /api/clay-orders/pending | Yes | 200 |
-| GET | /api/clay-orders/:id | Yes | 200 |
-| POST | /api/clay-orders | Yes | 201 |
-| PATCH | /api/clay-orders/:id | Yes | 200 |
-| DELETE | /api/clay-orders/:id | Yes | 200 |
+| GET | /api/material-orders | Yes | 200 |
+| GET | /api/material-orders/pending | Yes | 200 |
+| GET | /api/material-orders/:id | Yes | 200 |
+| POST | /api/material-orders | Yes | 201 |
+| PATCH | /api/material-orders/:id | Yes | 200 |
+| DELETE | /api/material-orders/:id | Yes | 200 |
 
 ## Rate Tiers
 
 | Method | Endpoint | Auth | Status |
 |--------|----------|------|--------|
-| GET | /api/firing-rates | Yes | 200 |
-| GET | /api/firing-rates/:id | Yes | 200 |
-| POST | /api/firing-rates | Yes | 201 |
-| PATCH | /api/firing-rates/:id | Yes | 200 |
-| DELETE | /api/firing-rates/:id | Yes | 200 |
+| GET | /api/service-rates | Yes | 200 |
+| GET | /api/service-rates/:id | Yes | 200 |
+| POST | /api/service-rates | Yes | 201 |
+| PATCH | /api/service-rates/:id | Yes | 200 |
+| DELETE | /api/service-rates/:id | Yes | 200 |
 
 ## Dashboard
 

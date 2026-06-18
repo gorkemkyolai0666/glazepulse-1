@@ -1,8 +1,8 @@
-# GlazePulse — AI Sistemi (AI_SYSTEM)
+# BindPulse — AI Sistemi (AI_SYSTEM)
 
 ## Durum
 
-GlazePulse MVP'de AI özelliği bulunmamaktadır. Gelecek fazlarda değerlendirilecek özellikler:
+BindPulse MVP'de AI özelliği bulunmamaktadır. Gelecek fazlarda değerlendirilecek özellikler:
 
 - Kort kullanım tahmin modeli (yoğun saat optimizasyonu)
 - Top makinesi bakım anomali tespiti
