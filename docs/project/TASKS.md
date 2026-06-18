@@ -1,4 +1,4 @@
-# GlazePulse — Görevler (TASKS)
+# BindPulse — Görevler (TASKS)
 
 ## Tamamlanan
 

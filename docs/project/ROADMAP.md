@@ -1,4 +1,4 @@
-# GlazePulse — Yol Haritası (ROADMAP)
+# BindPulse — Yol Haritası (ROADMAP)
 
 ## Faz 1 — MVP ✅ (2026-06-17)
 
