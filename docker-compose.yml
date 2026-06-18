@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: glazepulse
+      POSTGRES_PASSWORD: glazepulse123
+      POSTGRES_DB: glazepulse
+    ports:
+      - '5458:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U glazepulse']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    ports:
+      - '4018:4018'
+    environment:
+      DATABASE_URL: postgresql://glazepulse:glazepulse123@postgres:5432/glazepulse?schema=public
+      JWT_SECRET: glazepulse-dev-secret
+      FRONTEND_URL: http://localhost:3018
+      PORT: 4018
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npm run deploy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3018:3018'
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4018/api
+    depends_on:
+      - backend
