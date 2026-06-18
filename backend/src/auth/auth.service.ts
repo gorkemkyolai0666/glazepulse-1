@@ -21,9 +21,9 @@ export class AuthService {
 
     const passwordHash = await bcrypt.hash(dto.password, 12);
 
-    const potteryStudio = await this.prisma.potteryStudio.create({
+    const bindery = await this.prisma.bindery.create({
       data: {
-        name: dto.potteryStudioName,
+        name: dto.binderyName,
         phone: dto.phone,
         city: dto.city,
         state: dto.state,
@@ -40,8 +40,8 @@ export class AuthService {
       include: { users: true },
     });
 
-    const user = potteryStudio.users[0];
-    const token = this.generateToken(user.id, user.email, potteryStudio.id);
+    const user = bindery.users[0];
+    const token = this.generateToken(user.id, user.email, bindery.id);
 
     return {
       accessToken: token,
@@ -52,9 +52,9 @@ export class AuthService {
         lastName: user.lastName,
         role: user.role,
       },
-      potteryStudio: {
-        id: potteryStudio.id,
-        name: potteryStudio.name,
+      bindery: {
+        id: bindery.id,
+        name: bindery.name,
       },
     };
   }
@@ -62,7 +62,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
-      include: { potteryStudio: true },
+      include: { bindery: true },
     });
 
     if (!user) {
@@ -74,7 +74,7 @@ export class AuthService {
       throw new UnauthorizedException('Geçersiz giriş bilgileri');
     }
 
-    const token = this.generateToken(user.id, user.email, user.potteryStudioId);
+    const token = this.generateToken(user.id, user.email, user.binderyId);
 
     return {
       accessToken: token,
@@ -85,9 +85,9 @@ export class AuthService {
         lastName: user.lastName,
         role: user.role,
       },
-      potteryStudio: {
-        id: user.potteryStudio.id,
-        name: user.potteryStudio.name,
+      bindery: {
+        id: user.bindery.id,
+        name: user.bindery.name,
       },
     };
   }
@@ -95,7 +95,7 @@ export class AuthService {
   async getMe(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { potteryStudio: true },
+      include: { bindery: true },
     });
 
     if (!user) {
@@ -110,18 +110,18 @@ export class AuthService {
         lastName: user.lastName,
         role: user.role,
       },
-      potteryStudio: {
-        id: user.potteryStudio.id,
-        name: user.potteryStudio.name,
-        phone: user.potteryStudio.phone,
-        city: user.potteryStudio.city,
-        state: user.potteryStudio.state,
-        totalKilns: user.potteryStudio.totalKilns,
+      bindery: {
+        id: user.bindery.id,
+        name: user.bindery.name,
+        phone: user.bindery.phone,
+        city: user.bindery.city,
+        state: user.bindery.state,
+        totalPresses: user.bindery.totalPresses,
       },
     };
   }
 
-  private generateToken(userId: string, email: string, potteryStudioId: string): string {
-    return this.jwtService.sign({ sub: userId, email, potteryStudioId });
+  private generateToken(userId: string, email: string, binderyId: string): string {
+    return this.jwtService.sign({ sub: userId, email, binderyId });
   }
 }
