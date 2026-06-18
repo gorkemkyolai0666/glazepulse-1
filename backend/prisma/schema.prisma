@@ -10,38 +10,39 @@ datasource db {
 enum UserRole {
   owner
   manager
-  potter
+  binder
 }
 
-enum KilnType {
-  electric
-  gas
-  raku
-  wood
-  studio
+enum PressType {
+  letterpress
+  perfect_bind
+  saddle_stitch
+  case_bind
+  hand_bind
+  restoration
 }
 
-enum KilnStatus {
+enum PressStatus {
   available
-  firing
+  in_use
   cooling
   maintenance
   offline
 }
 
-enum BatchStatus {
+enum JobStatus {
   scheduled
-  firing
+  in_progress
   completed
   failed
 }
 
-enum FiringType {
-  bisque
-  glaze
-  raku
-  stoneware
-  crystalline
+enum BindingType {
+  case_binding
+  perfect_binding
+  saddle_stitch
+  restoration
+  gold_tooling
   custom
 }
 
@@ -59,201 +60,201 @@ enum MaintenanceStatus {
   cancelled
 }
 
-enum GlazeCategory {
-  mixing
-  testing
-  application
-  firing_prep
-  inventory
+enum FinishingCategory {
+  edge_gilding
+  marbling
+  tooling
+  cover_design
+  quality_check
   other
 }
 
-enum GlazeStatus {
+enum FinishingStatus {
   scheduled
   in_progress
   completed
   overdue
 }
 
-enum FiringCategory {
-  bisque_firing
-  glaze_firing
-  raku_session
+enum ServiceCategory {
+  case_binding
+  restoration
+  gold_tooling
   studio_rental
-  custom_work
+  rush_service
   other
 }
 
-enum FiringRateStatus {
+enum ServiceRateStatus {
   active
   upcoming
   archived
 }
 
-enum ClayOrderStatus {
+enum MaterialOrderStatus {
   pending
   in_progress
   completed
   delivered
 }
 
-model PotteryStudio {
-  id          String   @id @default(uuid())
-  name        String
-  phone       String?
-  address     String?
-  city        String?
-  state       String?
-  zipCode     String?  @map("zip_code")
-  totalKilns  Int      @default(6) @map("total_kilns")
-  timezone    String   @default("America/Chicago")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+model Bindery {
+  id           String   @id @default(uuid())
+  name         String
+  phone        String?
+  address      String?
+  city         String?
+  state        String?
+  zipCode      String?  @map("zip_code")
+  totalPresses Int      @default(6) @map("total_presses")
+  timezone     String   @default("America/Chicago")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  users            User[]
-  kilns            Kiln[]
-  firingBatches    FiringBatch[]
-  kilnMaintenance  KilnMaintenance[]
-  glazeChecklists  GlazeChecklist[]
-  firingRates      FiringRate[]
-  clayOrders       ClayOrder[]
+  users                User[]
+  presses              Press[]
+  bindingJobs          BindingJob[]
+  pressMaintenance     PressMaintenance[]
+  finishingChecklists  FinishingChecklist[]
+  serviceRates         ServiceRate[]
+  materialOrders       MaterialOrder[]
 
-  @@map("pottery_studios")
+  @@map("binderies")
 }
 
 model User {
-  id              String   @id @default(uuid())
-  email           String   @unique
-  passwordHash    String   @map("password_hash")
-  firstName       String   @map("first_name")
-  lastName        String   @map("last_name")
-  role            UserRole @default(owner)
-  potteryStudioId String   @map("pottery_studio_id")
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  role         UserRole @default(owner)
+  binderyId    String   @map("bindery_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  potteryStudio PotteryStudio @relation(fields: [potteryStudioId], references: [id], onDelete: Cascade)
+  bindery Bindery @relation(fields: [binderyId], references: [id], onDelete: Cascade)
 
   @@map("users")
 }
 
-model Kiln {
-  id              String     @id @default(uuid())
-  potteryStudioId String     @map("pottery_studio_id")
-  name            String
-  zone            String
-  kilnType        KilnType   @default(electric) @map("kiln_type")
-  kilnModel       String?    @map("kiln_model")
-  status          KilnStatus @default(available)
-  notes           String?
-  createdAt       DateTime   @default(now()) @map("created_at")
-  updatedAt       DateTime   @updatedAt @map("updated_at")
+model Press {
+  id           String      @id @default(uuid())
+  binderyId    String      @map("bindery_id")
+  name         String
+  zone         String
+  pressType    PressType   @default(letterpress) @map("press_type")
+  pressModel   String?     @map("press_model")
+  status       PressStatus @default(available)
+  notes        String?
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
 
-  potteryStudio   PotteryStudio     @relation(fields: [potteryStudioId], references: [id], onDelete: Cascade)
-  firingBatches   FiringBatch[]
-  kilnMaintenance KilnMaintenance[]
+  bindery          Bindery            @relation(fields: [binderyId], references: [id], onDelete: Cascade)
+  bindingJobs      BindingJob[]
+  pressMaintenance PressMaintenance[]
 
-  @@unique([potteryStudioId, name])
-  @@index([potteryStudioId, status])
-  @@map("kilns")
+  @@unique([binderyId, name])
+  @@index([binderyId, status])
+  @@map("presses")
 }
 
-model FiringBatch {
-  id              String      @id @default(uuid())
-  potteryStudioId String      @map("pottery_studio_id")
-  kilnId          String      @map("kiln_id")
-  scheduledAt     DateTime    @map("scheduled_at")
-  firingType      FiringType  @default(bisque) @map("firing_type")
-  cashAmount      Float       @default(0) @map("cash_amount")
-  cardAmount      Float       @default(0) @map("card_amount")
-  itemCount       Int         @default(1) @map("item_count")
-  coneAdjustment  Float       @default(0) @map("cone_adjustment")
-  status          BatchStatus @default(scheduled)
-  notes           String?
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("updated_at")
+model BindingJob {
+  id           String      @id @default(uuid())
+  binderyId    String      @map("bindery_id")
+  pressId      String      @map("press_id")
+  scheduledAt  DateTime    @map("scheduled_at")
+  bindingType  BindingType @default(case_binding) @map("binding_type")
+  cashAmount   Float       @default(0) @map("cash_amount")
+  cardAmount   Float       @default(0) @map("card_amount")
+  pageCount    Int         @default(1) @map("page_count")
+  rushFee      Float       @default(0) @map("rush_fee")
+  status       JobStatus   @default(scheduled)
+  notes        String?
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
 
-  potteryStudio PotteryStudio @relation(fields: [potteryStudioId], references: [id], onDelete: Cascade)
-  kiln          Kiln          @relation(fields: [kilnId], references: [id], onDelete: Cascade)
+  bindery Bindery @relation(fields: [binderyId], references: [id], onDelete: Cascade)
+  press   Press   @relation(fields: [pressId], references: [id], onDelete: Cascade)
 
-  @@index([potteryStudioId, scheduledAt])
-  @@index([potteryStudioId, status])
-  @@map("firing_batches")
+  @@index([binderyId, scheduledAt])
+  @@index([binderyId, status])
+  @@map("binding_jobs")
 }
 
-model KilnMaintenance {
-  id              String              @id @default(uuid())
-  potteryStudioId String              @map("pottery_studio_id")
-  kilnId          String              @map("kiln_id")
+model PressMaintenance {
+  id          String              @id @default(uuid())
+  binderyId   String              @map("bindery_id")
+  pressId     String              @map("press_id")
+  title       String
+  description String?
+  reportedAt  DateTime            @map("reported_at")
+  completedAt DateTime?           @map("completed_at")
+  priority    MaintenancePriority @default(medium)
+  status      MaintenanceStatus   @default(open)
+  cost        Float?
+  notes       String?
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+
+  bindery Bindery @relation(fields: [binderyId], references: [id], onDelete: Cascade)
+  press   Press   @relation(fields: [pressId], references: [id], onDelete: Cascade)
+
+  @@index([binderyId, status])
+  @@index([binderyId, priority])
+  @@map("press_maintenance")
+}
+
+model FinishingChecklist {
+  id          String            @id @default(uuid())
+  binderyId   String            @map("bindery_id")
+  title       String
+  description String?
+  category    FinishingCategory @default(other)
+  zone        String?
+  scheduledAt DateTime          @map("scheduled_at")
+  status      FinishingStatus   @default(scheduled)
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  bindery Bindery @relation(fields: [binderyId], references: [id], onDelete: Cascade)
+
+  @@index([binderyId, scheduledAt])
+  @@map("finishing_checklists")
+}
+
+model ServiceRate {
+  id              String            @id @default(uuid())
+  binderyId       String            @map("bindery_id")
   title           String
-  description     String?
-  reportedAt      DateTime            @map("reported_at")
-  completedAt     DateTime?           @map("completed_at")
-  priority        MaintenancePriority @default(medium)
-  status          MaintenanceStatus   @default(open)
-  cost            Float?
+  rateCategory    ServiceCategory   @default(case_binding) @map("rate_category")
+  status          ServiceRateStatus @default(active)
+  basePrice       Float             @map("base_price")
+  priceMultiplier Float             @default(1.0) @map("price_multiplier")
   notes           String?
-  createdAt       DateTime            @default(now()) @map("created_at")
-  updatedAt       DateTime            @updatedAt @map("updated_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
 
-  potteryStudio PotteryStudio @relation(fields: [potteryStudioId], references: [id], onDelete: Cascade)
-  kiln          Kiln          @relation(fields: [kilnId], references: [id], onDelete: Cascade)
+  bindery Bindery @relation(fields: [binderyId], references: [id], onDelete: Cascade)
 
-  @@index([potteryStudioId, status])
-  @@index([potteryStudioId, priority])
-  @@map("kiln_maintenance")
+  @@index([binderyId, rateCategory])
+  @@map("service_rates")
 }
 
-model GlazeChecklist {
-  id              String        @id @default(uuid())
-  potteryStudioId String        @map("pottery_studio_id")
-  title           String
-  description     String?
-  category        GlazeCategory @default(other)
-  zone            String?
-  scheduledAt     DateTime      @map("scheduled_at")
-  status          GlazeStatus   @default(scheduled)
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
+model MaterialOrder {
+  id           String              @id @default(uuid())
+  binderyId    String              @map("bindery_id")
+  customerName String              @map("customer_name")
+  materialType String              @map("material_type")
+  supplierName String?             @map("supplier_name")
+  status       MaterialOrderStatus @default(pending)
+  price        Float               @default(0)
+  notes        String?
+  createdAt    DateTime            @default(now()) @map("created_at")
+  updatedAt    DateTime            @updatedAt @map("updated_at")
 
-  potteryStudio PotteryStudio @relation(fields: [potteryStudioId], references: [id], onDelete: Cascade)
+  bindery Bindery @relation(fields: [binderyId], references: [id], onDelete: Cascade)
 
-  @@index([potteryStudioId, scheduledAt])
-  @@map("glaze_checklists")
-}
-
-model FiringRate {
-  id              String           @id @default(uuid())
-  potteryStudioId String           @map("pottery_studio_id")
-  title           String
-  rateCategory    FiringCategory   @default(bisque_firing) @map("rate_category")
-  status          FiringRateStatus @default(active)
-  basePrice       Float            @map("base_price")
-  priceMultiplier Float            @default(1.0) @map("price_multiplier")
-  notes           String?
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
-
-  potteryStudio PotteryStudio @relation(fields: [potteryStudioId], references: [id], onDelete: Cascade)
-
-  @@index([potteryStudioId, rateCategory])
-  @@map("firing_rates")
-}
-
-model ClayOrder {
-  id              String          @id @default(uuid())
-  potteryStudioId String          @map("pottery_studio_id")
-  customerName    String          @map("customer_name")
-  clayBody        String          @map("clay_body")
-  supplierName    String?         @map("supplier_name")
-  status          ClayOrderStatus @default(pending)
-  price           Float           @default(0)
-  notes           String?
-  createdAt       DateTime        @default(now()) @map("created_at")
-  updatedAt       DateTime        @updatedAt @map("updated_at")
-
-  potteryStudio PotteryStudio @relation(fields: [potteryStudioId], references: [id], onDelete: Cascade)
-
-  @@index([potteryStudioId, status])
-  @@map("clay_orders")
+  @@index([binderyId, status])
+  @@map("material_orders")
 }
