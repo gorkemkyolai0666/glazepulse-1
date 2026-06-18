@@ -35,52 +35,53 @@ export function formatPercent(value: number): string {
   return `%${value}`;
 }
 
-const KILN_STATUS: Record<string, string> = {
+const PRESS_STATUS: Record<string, string> = {
   available: 'Müsait',
-  firing: 'Pişiriliyor',
+  in_use: 'Kullanımda',
   cooling: 'Soğutuluyor',
   maintenance: 'Bakımda',
   offline: 'Kapalı',
 };
 
-export function formatKilnStatus(status: string): string {
-  return KILN_STATUS[status] || status;
+export function formatPressStatus(status: string): string {
+  return PRESS_STATUS[status] || status;
 }
 
-const KILN_TYPE: Record<string, string> = {
-  electric: 'Elektrik',
-  gas: 'Gaz',
-  raku: 'Raku',
-  wood: 'Odun',
-  studio: 'Stüdyo',
+const PRESS_TYPE: Record<string, string> = {
+  letterpress: 'Letterpress',
+  perfect_bind: 'Mükemmel Cilt',
+  saddle_stitch: 'Zımba Cilt',
+  case_bind: 'Kutu Cilt',
+  hand_bind: 'El Cilt',
+  restoration: 'Restorasyon',
 };
 
-export function formatKilnType(kilnType: string): string {
-  return KILN_TYPE[kilnType] || kilnType;
+export function formatPressType(pressType: string): string {
+  return PRESS_TYPE[pressType] || pressType;
 }
 
-const BATCH_STATUS: Record<string, string> = {
+const JOB_STATUS: Record<string, string> = {
   scheduled: 'Planlandı',
-  firing: 'Pişiriliyor',
+  in_progress: 'Devam Ediyor',
   completed: 'Tamamlandı',
   failed: 'Başarısız',
 };
 
-export function formatBatchStatus(status: string): string {
-  return BATCH_STATUS[status] || status;
+export function formatJobStatus(status: string): string {
+  return JOB_STATUS[status] || status;
 }
 
-const FIRING_TYPE: Record<string, string> = {
-  bisque: 'Bisküvi',
-  glaze: 'Sır',
-  raku: 'Raku',
-  stoneware: 'Taş Çini',
-  crystalline: 'Kristal',
+const BINDING_TYPE: Record<string, string> = {
+  case_binding: 'Kutu Cilt',
+  perfect_binding: 'Mükemmel Cilt',
+  saddle_stitch: 'Zımba Cilt',
+  restoration: 'Restorasyon',
+  gold_tooling: 'Altın Yaldız',
   custom: 'Özel',
 };
 
-export function formatFiringType(type: string): string {
-  return FIRING_TYPE[type] || type;
+export function formatBindingType(type: string): string {
+  return BINDING_TYPE[type] || type;
 }
 
 const MAINTENANCE_STATUS: Record<string, string> = {
@@ -90,7 +91,7 @@ const MAINTENANCE_STATUS: Record<string, string> = {
   cancelled: 'İptal',
 };
 
-export function formatKilnMaintenanceStatus(status: string): string {
+export function formatPressMaintenanceStatus(status: string): string {
   return MAINTENANCE_STATUS[status] || status;
 }
 
@@ -101,66 +102,66 @@ const MAINTENANCE_PRIORITY: Record<string, string> = {
   urgent: 'Acil',
 };
 
-export function formatKilnMaintenancePriority(priority: string): string {
+export function formatPressMaintenancePriority(priority: string): string {
   return MAINTENANCE_PRIORITY[priority] || priority;
 }
 
-const GLAZE_STATUS: Record<string, string> = {
+const FINISHING_STATUS: Record<string, string> = {
   scheduled: 'Planlandı',
   in_progress: 'Devam Ediyor',
   completed: 'Tamamlandı',
   overdue: 'Gecikmiş',
 };
 
-export function formatGlazeStatus(status: string): string {
-  return GLAZE_STATUS[status] || status;
+export function formatFinishingStatus(status: string): string {
+  return FINISHING_STATUS[status] || status;
 }
 
-const GLAZE_CATEGORY: Record<string, string> = {
-  mixing: 'Karıştırma',
-  testing: 'Test',
-  application: 'Uygulama',
-  firing_prep: 'Pişirim Hazırlığı',
-  inventory: 'Envanter',
+const FINISHING_CATEGORY: Record<string, string> = {
+  edge_gilding: 'Kenar Yaldız',
+  marbling: 'Ebru',
+  tooling: 'Kabartma',
+  cover_design: 'Kapak Tasarımı',
+  quality_check: 'Kalite Kontrol',
   other: 'Diğer',
 };
 
-export function formatGlazeCategory(category: string): string {
-  return GLAZE_CATEGORY[category] || category;
+export function formatFinishingCategory(category: string): string {
+  return FINISHING_CATEGORY[category] || category;
 }
 
-const CLAY_ORDER_STATUS: Record<string, string> = {
+const MATERIAL_ORDER_STATUS: Record<string, string> = {
   pending: 'Beklemede',
   in_progress: 'Devam Ediyor',
   completed: 'Tamamlandı',
   delivered: 'Teslim Edildi',
 };
 
-export function formatClayOrderStatus(status: string): string {
-  return CLAY_ORDER_STATUS[status] || status;
+export function formatMaterialOrderStatus(status: string): string {
+  return MATERIAL_ORDER_STATUS[status] || status;
 }
 
-const FIRING_RATE_STATUS: Record<string, string> = {
+const SERVICE_RATE_STATUS: Record<string, string> = {
   active: 'Aktif',
   upcoming: 'Yakında',
   archived: 'Arşiv',
 };
 
-export function formatFiringRateStatus(status: string): string {
-  return FIRING_RATE_STATUS[status] || status;
+export function formatServiceRateStatus(status: string): string {
+  return SERVICE_RATE_STATUS[status] || status;
 }
 
-const FIRING_CATEGORY: Record<string, string> = {
-  bisque_firing: 'Bisküvi Pişirimi',
-  glaze_firing: 'Sır Pişirimi',
-  raku_session: 'Raku Seansı',
-  studio_rental: 'Stüdyo Kiralama',
-  custom_work: 'Özel İş',
+const SERVICE_CATEGORY: Record<string, string> = {
+  case_binding: 'Kutu Cilt',
+  restoration: 'Restorasyon',
+  gold_tooling: 'Altın Yaldız',
+  studio_rental: 'Atölye Kiralama',
+  rush_service: 'Acil Hizmet',
   other: 'Diğer',
 };
 
-export function formatFiringCategory(category: string): string {
-  return FIRING_CATEGORY[category] || category;
+export function formatServiceCategory(category: string): string {
+  return SERVICE_CATEGORY[category] || category;
 }
 
 const MONTH_NAMES: Record<number, string> = {
