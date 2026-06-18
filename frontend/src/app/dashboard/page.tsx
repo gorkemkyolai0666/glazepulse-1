@@ -13,41 +13,41 @@ import {
   formatCurrency,
   formatDateTime,
   formatPercent,
-  formatBatchStatus,
-  formatKilnMaintenanceStatus,
-  formatKilnMaintenancePriority,
-  formatKilnType,
-  formatFiringType,
+  formatJobStatus,
+  formatPressMaintenanceStatus,
+  formatPressMaintenancePriority,
+  formatPressType,
+  formatBindingType,
 } from '@/lib/utils';
 
 interface DashboardStats {
-  totalKilns: number;
-  availableKilns: number;
-  firingKilns: number;
-  kilnUtilizationRate: number;
-  openKilnMaintenance: number;
-  urgentKilnMaintenance: number;
-  pendingGlazeChecklist: number;
+  totalPresses: number;
+  availablePresses: number;
+  activePresses: number;
+  pressUtilizationRate: number;
+  openPressMaintenance: number;
+  urgentPressMaintenance: number;
+  pendingFinishingChecklist: number;
   dailyRevenue: number;
-  recentBatches: Array<{
+  recentJobs: Array<{
     id: string;
     cashAmount: number;
     cardAmount: number;
-    coneAdjustment: number;
+    rushFee: number;
     scheduledAt: string;
-    firingType?: string;
+    bindingType?: string;
     status: string;
-    kiln?: { name: string; zone: string; kilnType: string };
+    press?: { name: string; zone: string; pressType: string };
   }>;
-  recentKilnMaintenance: Array<{
+  recentPressMaintenance: Array<{
     id: string;
     title: string;
     priority: string;
     status: string;
     reportedAt: string;
-    kiln?: { name: string; zone: string };
+    press?: { name: string; zone: string };
   }>;
-  studioZones: Array<{ zone: string; kilnCount: number }>;
+  binderyZones: Array<{ zone: string; pressCount: number }>;
   monthlyTrend: Array<{ month: string; games: number; revenue: number }>;
 }
 
@@ -83,7 +83,7 @@ export default function DashboardPage() {
       <div className="space-y-6">
         <div>
           <h1 className="font-display text-3xl text-primary">Operasyon Paneli</h1>
-          <p className="text-muted-foreground">Fırın kullanımı ve günlük gelir özeti</p>
+          <p className="text-muted-foreground">Pres kullanımı ve günlük gelir özeti</p>
         </div>
 
         {loading && <LoadingSpinner />}
@@ -92,63 +92,63 @@ export default function DashboardPage() {
           <>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <StatCard
-                title="Fırın Kullanımı"
-                value={formatPercent(stats.kilnUtilizationRate)}
-                description={`${stats.availableKilns}/${stats.totalKilns} fırın müsait`}
+                title="Pres Kullanımı"
+                value={formatPercent(stats.pressUtilizationRate)}
+                description={`${stats.availablePresses}/${stats.totalPresses} pres müsait`}
                 icon={<CircleDot className="h-4 w-4" />}
               />
               <StatCard
                 title="Günlük Gelir"
                 value={formatCurrency(stats.dailyRevenue)}
-                description={`${stats.firingKilns} fırın pişirimde`}
+                description={`${stats.activePresses} pres kullanımda`}
                 icon={<DollarSign className="h-4 w-4" />}
               />
               <StatCard
-                title="Fırın Bakımı"
-                value={stats.openKilnMaintenance}
-                description={`${stats.urgentKilnMaintenance} acil/yüksek öncelik`}
+                title="Pres Bakımı"
+                value={stats.openPressMaintenance}
+                description={`${stats.urgentPressMaintenance} acil/yüksek öncelik`}
                 icon={<Puzzle className="h-4 w-4" />}
               />
               <StatCard
-                title="Sır Kontrol Planı"
-                value={stats.pendingGlazeChecklist}
+                title="Bitirme Kontrol Planı"
+                value={stats.pendingFinishingChecklist}
                 description="7 gün içinde planlanan"
                 icon={<ClipboardCheck className="h-4 w-4" />}
               />
             </div>
 
-            <Card className="kiln-card">
+            <Card className="archive-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-display text-lg">
                   <Users className="h-4 w-4 text-accent" />
-                  Son Pişirim Partileri
+                  Son Cilt İşleri
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {stats.recentBatches.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Henüz pişirim kaydı yok.</p>
+                {stats.recentJobs.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">Henüz cilt işi kaydı yok.</p>
                 ) : (
                   <div className="space-y-3">
-                    {stats.recentBatches.map((session) => (
+                    {stats.recentJobs.map((session) => (
                       <div
                         key={session.id}
                         className="flex flex-wrap items-center justify-between gap-2 bg-muted/40 px-4 py-3"
                       >
                         <div>
-                          <p className="font-semibold">{session.kiln?.name || '—'}</p>
+                          <p className="font-semibold">{session.press?.name || '—'}</p>
                           <p className="text-xs text-muted-foreground">
-                            {session.kiln?.zone} · {formatKilnType(session.kiln?.kilnType || '')} · {formatFiringType(session.firingType || '')}
+                            {session.press?.zone} · {formatPressType(session.press?.pressType || '')} · {formatBindingType(session.bindingType || '')}
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="font-mono font-semibold">
                             {formatCurrency(
-                              session.cashAmount + session.cardAmount + session.coneAdjustment,
+                              session.cashAmount + session.cardAmount + session.rushFee,
                             )}
                           </p>
                           <p className="text-xs text-muted-foreground">{formatDateTime(session.scheduledAt)}</p>
                         </div>
-                        <Badge variant="secondary">{formatBatchStatus(session.status)}</Badge>
+                        <Badge variant="secondary">{formatJobStatus(session.status)}</Badge>
                       </div>
                     ))}
                   </div>
@@ -156,24 +156,24 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="kiln-card">
+            <Card className="archive-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-display text-lg">
                   <AlertTriangle className="h-4 w-4 text-destructive" />
-                  Açık Fırın Bakım Kayıtları
+                  Açık Pres Bakım Kayıtları
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {stats.recentKilnMaintenance.length === 0 ? (
+                {stats.recentPressMaintenance.length === 0 ? (
                   <p className="text-sm text-muted-foreground">Açık bakım kaydı yok.</p>
                 ) : (
                   <div className="space-y-3">
-                    {stats.recentKilnMaintenance.map((item) => (
+                    {stats.recentPressMaintenance.map((item) => (
                       <div key={item.id} className="bg-muted/40 px-4 py-3">
                         <p className="font-semibold">{item.title}</p>
                         <p className="text-xs text-muted-foreground">
-                          {item.kiln?.name || 'Fırın belirtilmemiş'} · {item.kiln?.zone} · {formatKilnMaintenancePriority(item.priority)} ·{' '}
-                          {formatKilnMaintenanceStatus(item.status)}
+                          {item.press?.name || 'Pres belirtilmemiş'} · {item.press?.zone} · {formatPressMaintenancePriority(item.priority)} ·{' '}
+                          {formatPressMaintenanceStatus(item.status)}
                         </p>
                       </div>
                     ))}
@@ -183,7 +183,7 @@ export default function DashboardPage() {
             </Card>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <Card className="kiln-card">
+              <Card className="archive-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 font-display text-lg">
                     <TrendingUp className="h-4 w-4 text-accent" />
@@ -200,7 +200,7 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              <Card className="kiln-card">
+              <Card className="archive-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 font-display text-lg">
                     <CircleDot className="h-4 w-4 text-accent" />
@@ -208,10 +208,10 @@ export default function DashboardPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  {stats.studioZones.map((w) => (
+                  {stats.binderyZones.map((w) => (
                     <div key={w.zone} className="flex justify-between text-sm">
                       <span>{w.zone}</span>
-                      <Badge variant="secondary">{w.kilnCount} oda</Badge>
+                      <Badge variant="secondary">{w.pressCount} oda</Badge>
                     </div>
                   ))}
                 </CardContent>
