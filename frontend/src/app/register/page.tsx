@@ -18,7 +18,7 @@ export default function RegisterPage() {
     password: '',
     firstName: '',
     lastName: '',
-    potteryStudioName: '',
+    binderyName: '',
     phone: '',
     city: '',
     state: '',
@@ -51,9 +51,9 @@ export default function RegisterPage() {
         <h1 className="font-display text-3xl text-primary">Tesis Kaydı</h1>
       </div>
 
-      <Card className="kiln-card w-full max-w-lg">
+      <Card className="archive-card w-full max-w-lg">
         <CardHeader>
-          <CardTitle className="font-display text-2xl">Yeni Terzi Atölyesi Tesisi Oluştur</CardTitle>
+          <CardTitle className="font-display text-2xl">Yeni Terzi Cilt Atölyesisi Tesisi Oluştur</CardTitle>
           <CardDescription>14 gün ücretsiz deneme ile başlayın</CardDescription>
         </CardHeader>
         <CardContent>
@@ -74,13 +74,13 @@ export default function RegisterPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="potteryStudioName">Tesis Adı</Label>
+              <Label htmlFor="binderyName">Tesis Adı</Label>
               <Input
-                id="potteryStudioName"
-                value={form.potteryStudioName}
-                onChange={(e) => update('potteryStudioName', e.target.value)}
+                id="binderyName"
+                value={form.binderyName}
+                onChange={(e) => update('binderyName', e.target.value)}
                 required
-                placeholder="Claywheel Pottery Studio"
+                placeholder="Heritage Bindery & Conservation"
               />
             </div>
             <div className="space-y-2">
@@ -112,7 +112,7 @@ export default function RegisterPage() {
                 <Input id="phone" value={form.phone} onChange={(e) => update('phone', e.target.value)} />
               </div>
             </div>
-            <Button type="submit" className="kiln-btn w-full" disabled={loading}>
+            <Button type="submit" className="archive-btn w-full" disabled={loading}>
               {loading ? 'Kayıt yapılıyor...' : 'Kayıt Ol'}
             </Button>
           </form>
