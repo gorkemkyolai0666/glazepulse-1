@@ -1,11 +1,11 @@
 {
-  "name": "glazepulse-frontend",
+  "name": "bindpulse-frontend",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3018",
+    "dev": "next dev -p 3019",
     "build": "next build",
-    "start": "next start -p 3018",
+    "start": "next start -p 3019",
     "lint": "next lint"
   },
   "dependencies": {
