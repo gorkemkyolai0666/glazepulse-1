@@ -15,7 +15,7 @@ export class RegisterDto {
   lastName: string;
 
   @IsString()
-  potteryStudioName: string;
+  binderyName: string;
 
   @IsOptional()
   @IsString()
