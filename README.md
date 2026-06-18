@@ -1,27 +1,28 @@
-# GlazePulse
+# BindPulse
 
-Terzi ve tadilat atölyesi operasyon yönetimi B2B SaaS platformu.
+Cilt atölyesi ve kitap restorasyon stüdyoları için operasyon yönetim SaaS'ı.
 
 ## Stack
 
+- **Frontend:** Next.js, TypeScript, Tailwind CSS, shadcn/ui
 - **Backend:** NestJS, Prisma, PostgreSQL
-- **Frontend:** Next.js 14, TypeScript, Tailwind CSS, shadcn/ui
+- **Deploy:** Railway (backend) + Vercel (frontend)
+
+## Demo
+
+| E-posta | Şifre |
+|---------|-------|
+| demo@heritagebindery.com | demo123456 |
 
 ## Geliştirme
 
 ```bash
-# Backend (port 4018)
-cd backend && npm install && npm run start:dev
+# Backend (port 4019)
+cd backend && cp .env.example .env && npm install
+npm run db:migrate && npm run db:seed && npm run start:dev
 
-# Frontend (port 3018)
-cd frontend && npm install && npm run dev
-```
-
-## Demo
-
-```
-E-posta: demo@claywheelstudio.com
-Şifre: demo123456
+# Frontend (port 3019)
+cd frontend && cp .env.example .env && npm install && npm run dev
 ```
 
 ## Provisioning
@@ -30,6 +31,8 @@ E-posta: demo@claywheelstudio.com
 npm run provision
 ```
 
-## Lisans
+## Repo
 
-Private — Autonomous Software Company
+https://github.com/gorkemkyolai0666/glazepulse-1
+
+> Not: Repo rename `bindpulse` olarak planlanmıştır.

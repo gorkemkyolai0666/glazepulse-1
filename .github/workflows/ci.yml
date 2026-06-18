@@ -17,11 +17,11 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: glazepulse
-          POSTGRES_PASSWORD: glazepulse123
-          POSTGRES_DB: glazepulse
+          POSTGRES_USER: bindpulse
+          POSTGRES_PASSWORD: bindpulse123
+          POSTGRES_DB: bindpulse
         ports:
-          - 5458:5432
+          - 5459:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -48,7 +48,7 @@ jobs:
           npm run db:migrate
           npm run db:seed
         env:
-          DATABASE_URL: postgresql://glazepulse:glazepulse123@localhost:5458/glazepulse?schema=public
+          DATABASE_URL: postgresql://bindpulse:bindpulse123@localhost:5459/bindpulse?schema=public
 
       - name: Run unit tests
         run: npm test
@@ -58,9 +58,9 @@ jobs:
 
       - name: Start API and run integration tests
         env:
-          DATABASE_URL: postgresql://glazepulse:glazepulse123@localhost:5458/glazepulse?schema=public
-          JWT_SECRET: glazepulse-ci-secret
-          PORT: 4018
+          DATABASE_URL: postgresql://bindpulse:bindpulse123@localhost:5459/bindpulse?schema=public
+          JWT_SECRET: bindpulse-ci-secret
+          PORT: 4019
         run: |
           npm run start:prod &
           sleep 5
@@ -87,4 +87,4 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: http://localhost:4018/api
+          NEXT_PUBLIC_API_URL: http://localhost:4019/api
