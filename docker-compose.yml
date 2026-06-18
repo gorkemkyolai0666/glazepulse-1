@@ -4,13 +4,13 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: glazepulse
-      POSTGRES_PASSWORD: glazepulse123
-      POSTGRES_DB: glazepulse
+      POSTGRES_USER: bindpulse
+      POSTGRES_PASSWORD: bindpulse123
+      POSTGRES_DB: bindpulse
     ports:
-      - '5458:5432'
+      - '5459:5432'
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U glazepulse']
+      test: ['CMD-SHELL', 'pg_isready -U bindpulse']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -18,12 +18,12 @@ services:
   backend:
     build: ./backend
     ports:
-      - '4018:4018'
+      - '4019:4019'
     environment:
-      DATABASE_URL: postgresql://glazepulse:glazepulse123@postgres:5432/glazepulse?schema=public
-      JWT_SECRET: glazepulse-dev-secret
-      FRONTEND_URL: http://localhost:3018
-      PORT: 4018
+      DATABASE_URL: postgresql://bindpulse:bindpulse123@postgres:5432/bindpulse?schema=public
+      JWT_SECRET: bindpulse-dev-secret
+      FRONTEND_URL: http://localhost:3019
+      PORT: 4019
     depends_on:
       postgres:
         condition: service_healthy
@@ -32,8 +32,8 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - '3018:3018'
+      - '3019:3019'
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:4018/api
+      NEXT_PUBLIC_API_URL: http://localhost:4019/api
     depends_on:
       - backend
