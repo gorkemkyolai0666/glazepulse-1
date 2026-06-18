@@ -8,7 +8,7 @@ export class DashboardController {
   constructor(private dashboardService: DashboardService) {}
 
   @Get('stats')
-  getStats(@Request() req: { user: { potteryStudioId: string } }) {
-    return this.dashboardService.getStats(req.user.potteryStudioId);
+  getStats(@Request() req: { user: { binderyId: string } }) {
+    return this.dashboardService.getStats(req.user.binderyId);
   }
 }

@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class DashboardService {
   constructor(private prisma: PrismaService) {}
 
-  async getStats(potteryStudioId: string) {
+  async getStats(binderyId: string) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -16,137 +16,137 @@ export class DashboardService {
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
     const [
-      potteryStudio,
-      totalKilns,
-      availableKilns,
-      firingKilns,
-      totalBatches,
-      openKilnMaintenance,
-      urgentKilnMaintenance,
-      pendingGlazeChecklist,
-      activeFiringRates,
-      pendingClayOrders,
-      completedClayOrders,
+      bindery,
+      totalPresses,
+      availablePresses,
+      activePresses,
+      totalJobs,
+      openPressMaintenance,
+      urgentPressMaintenance,
+      pendingFinishingChecklist,
+      activeServiceRates,
+      pendingMaterialOrders,
+      completedMaterialOrders,
       revenueTotals,
-      recentBatches,
-      recentKilnMaintenance,
-      studioZones,
+      recentJobs,
+      recentPressMaintenance,
+      binderyZones,
     ] = await Promise.all([
-      this.prisma.potteryStudio.findUnique({ where: { id: potteryStudioId } }),
-      this.prisma.kiln.count({ where: { potteryStudioId } }),
-      this.prisma.kiln.count({ where: { potteryStudioId, status: 'available' } }),
-      this.prisma.kiln.count({ where: { potteryStudioId, status: 'firing' } }),
-      this.prisma.firingBatch.count({ where: { potteryStudioId } }),
-      this.prisma.kilnMaintenance.count({
-        where: { potteryStudioId, status: { in: ['open', 'in_progress'] } },
+      this.prisma.bindery.findUnique({ where: { id: binderyId } }),
+      this.prisma.press.count({ where: { binderyId } }),
+      this.prisma.press.count({ where: { binderyId, status: 'available' } }),
+      this.prisma.press.count({ where: { binderyId, status: 'in_use' } }),
+      this.prisma.bindingJob.count({ where: { binderyId } }),
+      this.prisma.pressMaintenance.count({
+        where: { binderyId, status: { in: ['open', 'in_progress'] } },
       }),
-      this.prisma.kilnMaintenance.count({
+      this.prisma.pressMaintenance.count({
         where: {
-          potteryStudioId,
+          binderyId,
           status: { in: ['open', 'in_progress'] },
           priority: { in: ['high', 'urgent'] },
         },
       }),
-      this.prisma.glazeChecklist.count({
+      this.prisma.finishingChecklist.count({
         where: {
-          potteryStudioId,
+          binderyId,
           status: { in: ['scheduled', 'overdue'] },
           scheduledAt: { lte: sevenDaysLater },
         },
       }),
-      this.prisma.firingRate.count({
-        where: { potteryStudioId, status: 'active' },
+      this.prisma.serviceRate.count({
+        where: { binderyId, status: 'active' },
       }),
-      this.prisma.clayOrder.count({
-        where: { potteryStudioId, status: { in: ['pending', 'in_progress'] } },
+      this.prisma.materialOrder.count({
+        where: { binderyId, status: { in: ['pending', 'in_progress'] } },
       }),
-      this.prisma.clayOrder.count({
-        where: { potteryStudioId, status: { in: ['completed', 'delivered'] } },
+      this.prisma.materialOrder.count({
+        where: { binderyId, status: { in: ['completed', 'delivered'] } },
       }),
-      this.prisma.firingBatch.aggregate({
-        where: { potteryStudioId, scheduledAt: { gte: today } },
-        _sum: { cashAmount: true, cardAmount: true, coneAdjustment: true },
+      this.prisma.bindingJob.aggregate({
+        where: { binderyId, scheduledAt: { gte: today } },
+        _sum: { cashAmount: true, cardAmount: true, rushFee: true },
       }),
-      this.prisma.firingBatch.findMany({
-        where: { potteryStudioId },
+      this.prisma.bindingJob.findMany({
+        where: { binderyId },
         include: {
-          kiln: { select: { name: true, zone: true, kilnType: true } },
+          press: { select: { name: true, zone: true, pressType: true } },
         },
         orderBy: { scheduledAt: 'desc' },
         take: 5,
       }),
-      this.prisma.kilnMaintenance.findMany({
-        where: { potteryStudioId, status: { in: ['open', 'in_progress'] } },
+      this.prisma.pressMaintenance.findMany({
+        where: { binderyId, status: { in: ['open', 'in_progress'] } },
         include: {
-          kiln: { select: { name: true, zone: true } },
+          press: { select: { name: true, zone: true } },
         },
         orderBy: { reportedAt: 'desc' },
         take: 5,
       }),
-      this.prisma.kiln.groupBy({
+      this.prisma.press.groupBy({
         by: ['zone'],
-        where: { potteryStudioId },
+        where: { binderyId },
         _count: { id: true },
       }),
     ]);
 
-    const totalCapacity = potteryStudio?.totalKilns || totalKilns || 1;
-    const kilnUtilizationRate =
-      totalKilns > 0 ? Math.round((firingKilns / totalKilns) * 1000) / 10 : 0;
+    const totalCapacity = bindery?.totalPresses || totalPresses || 1;
+    const pressUtilizationRate =
+      totalPresses > 0 ? Math.round((activePresses / totalPresses) * 1000) / 10 : 0;
 
     const dailyRevenue =
       (revenueTotals._sum.cashAmount || 0) +
       (revenueTotals._sum.cardAmount || 0) +
-      (revenueTotals._sum.coneAdjustment || 0);
+      (revenueTotals._sum.rushFee || 0);
 
-    const dailyConeAdjustments = revenueTotals._sum.coneAdjustment || 0;
+    const dailyRushFees = revenueTotals._sum.rushFee || 0;
 
-    const monthlyTrend = await this.getMonthlyTrend(potteryStudioId, sixMonthsAgo);
+    const monthlyTrend = await this.getMonthlyTrend(binderyId, sixMonthsAgo);
 
     return {
-      totalKilns,
-      availableKilns,
-      firingKilns,
+      totalPresses,
+      availablePresses,
+      activePresses,
       totalCapacity,
-      kilnUtilizationRate,
-      totalBatches,
-      openKilnMaintenance,
-      urgentKilnMaintenance,
-      pendingGlazeChecklist,
-      activeFiringRates,
-      pendingClayOrders,
-      completedClayOrders,
+      pressUtilizationRate,
+      totalJobs,
+      openPressMaintenance,
+      urgentPressMaintenance,
+      pendingFinishingChecklist,
+      activeServiceRates,
+      pendingMaterialOrders,
+      completedMaterialOrders,
       dailyRevenue,
-      dailyConeAdjustments,
-      recentBatches,
-      recentKilnMaintenance,
-      studioZones: studioZones.map((w) => ({
+      dailyRushFees,
+      recentJobs,
+      recentPressMaintenance,
+      binderyZones: binderyZones.map((w) => ({
         zone: w.zone,
-        kilnCount: w._count.id,
+        pressCount: w._count.id,
       })),
       monthlyTrend,
     };
   }
 
-  private async getMonthlyTrend(potteryStudioId: string, since: Date) {
-    const sessions = await this.prisma.firingBatch.findMany({
-      where: { potteryStudioId, scheduledAt: { gte: since } },
+  private async getMonthlyTrend(binderyId: string, since: Date) {
+    const sessions = await this.prisma.bindingJob.findMany({
+      where: { binderyId, scheduledAt: { gte: since } },
       select: {
         scheduledAt: true,
         cashAmount: true,
         cardAmount: true,
-        coneAdjustment: true,
-        itemCount: true,
+        rushFee: true,
+        pageCount: true,
       },
     });
 
-    const months: Record<string, { games: number; revenue: number; itemCount: number }> = {};
+    const months: Record<string, { games: number; revenue: number; pageCount: number }> = {};
 
     for (let i = 5; i >= 0; i--) {
       const d = new Date();
       d.setMonth(d.getMonth() - i);
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      months[key] = { games: 0, revenue: 0, itemCount: 0 };
+      months[key] = { games: 0, revenue: 0, pageCount: 0 };
     }
 
     sessions.forEach((session) => {
@@ -154,8 +154,8 @@ export class DashboardService {
       if (months[key]) {
         months[key].games++;
         months[key].revenue +=
-          session.cashAmount + session.cardAmount + session.coneAdjustment;
-        months[key].itemCount += session.itemCount;
+          session.cashAmount + session.cardAmount + session.rushFee;
+        months[key].pageCount += session.pageCount;
       }
     });
 

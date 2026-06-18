@@ -6,17 +6,17 @@ describe('DashboardService', () => {
   let service: DashboardService;
 
   const mockPrisma = {
-    potteryStudio: { findUnique: jest.fn() },
-    kiln: { count: jest.fn(), groupBy: jest.fn() },
-    firingBatch: {
+    bindery: { findUnique: jest.fn() },
+    press: { count: jest.fn(), groupBy: jest.fn() },
+    bindingJob: {
       count: jest.fn(),
       aggregate: jest.fn(),
       findMany: jest.fn().mockResolvedValue([]),
     },
-    kilnMaintenance: { count: jest.fn(), findMany: jest.fn().mockResolvedValue([]) },
-    glazeChecklist: { count: jest.fn() },
-    firingRate: { count: jest.fn() },
-    clayOrder: { count: jest.fn() },
+    pressMaintenance: { count: jest.fn(), findMany: jest.fn().mockResolvedValue([]) },
+    finishingChecklist: { count: jest.fn() },
+    serviceRate: { count: jest.fn() },
+    materialOrder: { count: jest.fn() },
   };
 
   beforeEach(async () => {
@@ -31,43 +31,43 @@ describe('DashboardService', () => {
     jest.clearAllMocks();
   });
 
-  it('should return pottering shop dashboard stats', async () => {
-    mockPrisma.potteryStudio.findUnique.mockResolvedValue({ totalKilns: 8 });
-    mockPrisma.kiln.count
+  it('should return bindering shop dashboard stats', async () => {
+    mockPrisma.bindery.findUnique.mockResolvedValue({ totalPresses: 8 });
+    mockPrisma.press.count
       .mockResolvedValueOnce(8)
       .mockResolvedValueOnce(4)
       .mockResolvedValueOnce(2);
-    mockPrisma.firingBatch.count.mockResolvedValue(42);
-    mockPrisma.kilnMaintenance.count
+    mockPrisma.bindingJob.count.mockResolvedValue(42);
+    mockPrisma.pressMaintenance.count
       .mockResolvedValueOnce(3)
       .mockResolvedValueOnce(1);
-    mockPrisma.firingBatch.aggregate.mockResolvedValue({
-      _sum: { cashAmount: 120, cardAmount: 280, coneAdjustment: 95 },
+    mockPrisma.bindingJob.aggregate.mockResolvedValue({
+      _sum: { cashAmount: 120, cardAmount: 280, rushFee: 95 },
     });
-    mockPrisma.firingBatch.findMany.mockResolvedValue([]);
-    mockPrisma.kilnMaintenance.findMany.mockResolvedValue([]);
-    mockPrisma.glazeChecklist.count.mockResolvedValue(2);
-    mockPrisma.firingRate.count.mockResolvedValue(3);
-    mockPrisma.clayOrder.count
+    mockPrisma.bindingJob.findMany.mockResolvedValue([]);
+    mockPrisma.pressMaintenance.findMany.mockResolvedValue([]);
+    mockPrisma.finishingChecklist.count.mockResolvedValue(2);
+    mockPrisma.serviceRate.count.mockResolvedValue(3);
+    mockPrisma.materialOrder.count
       .mockResolvedValueOnce(3)
       .mockResolvedValueOnce(2);
-    mockPrisma.kiln.groupBy.mockResolvedValue([
+    mockPrisma.press.groupBy.mockResolvedValue([
       { zone: 'East Zone', _count: { id: 3 } },
       { zone: 'West Zone', _count: { id: 3 } },
     ]);
 
     const stats = await service.getStats('shop-1');
 
-    expect(stats).toHaveProperty('kilnUtilizationRate');
+    expect(stats).toHaveProperty('pressUtilizationRate');
     expect(stats).toHaveProperty('dailyRevenue', 495);
-    expect(stats).toHaveProperty('dailyConeAdjustments', 95);
-    expect(stats).toHaveProperty('studioZones');
-    expect(stats).toHaveProperty('urgentKilnMaintenance');
-    expect(stats).toHaveProperty('pendingGlazeChecklist');
-    expect(stats).toHaveProperty('activeFiringRates', 3);
-    expect(stats).toHaveProperty('pendingClayOrders', 3);
-    expect(stats).toHaveProperty('completedClayOrders', 2);
-    expect(stats).toHaveProperty('availableKilns', 4);
-    expect(stats).toHaveProperty('totalKilns', 8);
+    expect(stats).toHaveProperty('dailyRushFees', 95);
+    expect(stats).toHaveProperty('binderyZones');
+    expect(stats).toHaveProperty('urgentPressMaintenance');
+    expect(stats).toHaveProperty('pendingFinishingChecklist');
+    expect(stats).toHaveProperty('activeServiceRates', 3);
+    expect(stats).toHaveProperty('pendingMaterialOrders', 3);
+    expect(stats).toHaveProperty('completedMaterialOrders', 2);
+    expect(stats).toHaveProperty('availablePresses', 4);
+    expect(stats).toHaveProperty('totalPresses', 8);
   });
 });
