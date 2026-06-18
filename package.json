@@ -1,8 +1,8 @@
 {
-  "name": "glazepulse",
+  "name": "bindpulse",
   "version": "1.0.0",
   "private": true,
-  "description": "GlazePulse — Tailoring & alteration shop operations SaaS",
+  "description": "BindPulse — Bookbinding & conservation workshop operations SaaS",
   "scripts": {
     "provision": "tsx scripts/provision-all.ts",
     "provision:railway": "tsx scripts/provision-railway.ts",
